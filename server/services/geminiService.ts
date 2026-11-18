@@ -1,16 +1,33 @@
 import { GoogleGenAI, Type } from '@google/genai';
-import { env } from '../config/env.ts';
+import dotenv from 'dotenv';
 import type { IAiAnalysis } from '../models/Attempt.ts';
 import type { StoredMission } from './dataStore.ts';
 
+function resolveGeminiApiKey(): string {
+  const readRaw = () =>
+    process.env.GEMINI_API_KEY ||
+    process.env.GOOGLE_API_KEY ||
+    process.env.API_KEY ||
+    '';
+
+  let raw = readRaw();
+  if (!raw) {
+    dotenv.config();
+    raw = readRaw();
+  }
+
+  return raw.trim().replace(/^["']|["']$/g, '');
+}
+
 function getGeminiClient(): GoogleGenAI {
-  if (!env.geminiApiKey || env.geminiApiKey === 'MY_GEMINI_API_KEY') {
+  const apiKey = resolveGeminiApiKey();
+  if (!apiKey || apiKey === 'MY_GEMINI_API_KEY') {
     throw new Error(
       'GEMINI_API_KEY no está configurada en el entorno del servidor.'
     );
   }
   return new GoogleGenAI({
-    apiKey: env.geminiApiKey,
+    apiKey,
     httpOptions: {
       headers: {
         'User-Agent': 'aistudio-build',
