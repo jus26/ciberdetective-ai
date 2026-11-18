@@ -1,0 +1,6 @@
+{
+  "name": "CiberDetective AI",
+  "description": "Juego educativo de ciberseguridad y derecho digital español y europeo con análisis inteligente asistido por Gemini.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
